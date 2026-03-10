@@ -28,24 +28,30 @@ To ensure efficient execution and to divide the algorithm complexities logically
     *   *Project Completion Status:* **20%**
 
 *   **Step 3: Member 2 - Image Duplicate Detection**
-    *   Convert extracted embedded images into Byte Arrays.
+    *   Convert extracted embedded images into Byte Arrays.in th
     *   Implement `SHA-256` hashing on the arrays.
     *   Construct a `HashSet` integration to achieve $O(1)$ duplicate image lookups (If hash repeats -> Duplicate detected).
+    *   *Project Completion Status:* **30%**
+
+*   **Step 4: Member 3 - JavaFX GUI Setup**
+    *   Initialize JavaFX dependency in `pom.xml`.
+    *   Design the main application window (File upload, Output fields).
+    *   Build the interactive UI to accept strictness drop-downs from the user.
     *   *Project Completion Status:* **40% (MILESTONE MET!)**
 
-*(Checkpoint: By the 25th, Steps 1-3 must be fully merged, ensuring 40% overall project functionality.)*
+*(Checkpoint: By the 25th, Steps 1-4 must be fully merged, ensuring 40% overall project functionality with a working UI base.)*
 
 ---
 
 ### Phase 2: Core Algorithmic Analytical Engines
 
-*   **Step 4: Member 3 - Level 1 Text Similarity (Low Strictness)**
+*   **Step 5: Member 3 - Level 1 Text Similarity (Low Strictness)**
     *   Design and implement `Jaccard Similarity` analysis.
     *   Extract clean text into word sets and compute similarity ($Similarity = Intersection / Union$).
     *   *Average Time Complexity:* $O(n+m)$
     *   *Project Completion Status:* **55%**
 
-*   **Step 5: Member 3 - Level 2 Text Similarity (Medium Strictness)**
+*   **Step 6: Member 3 - Level 2 Text Similarity (Medium Strictness)**
     *   Design and implement the `Rabin-Karp Algorithm`.
     *   Divide text into chunks and apply rolling hash mechanisms to detect exact structural pattern matches.
     *   *Average Time Complexity:* $O(n+m)$
@@ -55,14 +61,14 @@ To ensure efficient execution and to divide the algorithm complexities logically
 
 ### Phase 3: Advanced Depth Analytics & Controller Integration
 
-*   **Step 6: Member 4 - Level 3 Text Similarity (High Strictness)**
+*   **Step 7: Member 4 - Level 3 Text Similarity (High Strictness)**
     *   Design and implement the `Longest Common Subsequence (LCS)`.
     *   Apply Dynamic Programming techniques.
     *   Compute longest matching subsequences between document texts iteratively.
     *   *Average Time Complexity:* $O(n \times m)$
     *   *Project Completion Status:* **85%**
 
-*   **Step 7: Member 4 - Strictness Controller**
+*   **Step 8: Member 4 - Strictness Controller**
     *   Build the main faculty control execution logic:
         *   **Low** -> Triggers Jaccard only.
         *   **Medium** -> Triggers Jaccard AND Rabin-Karp.
@@ -74,7 +80,7 @@ To ensure efficient execution and to divide the algorithm complexities logically
 
 ### Phase 4: Finalization & Presentation
 
-*   **Step 8: All Members - Testing, Optimization & Report generation**
+*   **Step 9: All Members - Testing, Optimization & Report generation**
     *   Run diverse test assignments to evaluate edge cases.
     *   Compile the "Complexity Comparison Analysis Report" matching standard DAA expectations.
     *   Finalize inline code documentation.
