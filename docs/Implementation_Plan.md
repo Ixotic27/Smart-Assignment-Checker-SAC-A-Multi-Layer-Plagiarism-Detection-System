@@ -33,7 +33,7 @@ To ensure efficient execution and to divide the algorithm complexities logically
     *   Construct a `HashSet` integration to achieve $O(1)$ duplicate image lookups (If hash repeats -> Duplicate detected).
     *   *Project Completion Status:* **30%**
 
-*   **Step 4: Member 3 - JavaFX GUI Setup**
+*   **Step 4: Member 4 - JavaFX GUI Setup**
     *   Initialize JavaFX dependency in `pom.xml`.
     *   Design the main application window (File upload, Output fields).
     *   Build the interactive UI to accept strictness drop-downs from the user.
