@@ -6,3 +6,4 @@ public class Main {
         System.out.println("A Multi-Layer Plagiarism Detection System based on DAA Concepts");
     }
 }
+
