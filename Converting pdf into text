@@ -1,0 +1,50 @@
+<dependency>
+    <groupId>org.apache.pdfbox</groupId>
+    <artifactId>pdfbox</artifactId>
+    <version>2.0.30</version>
+</dependency>
+  // conveting pdf into text
+  import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+public class PDFToTextConverter {
+
+    public static void main(String[] args) {
+        // Input PDF file
+        // Input from user
+        File pdfFile = new File("input.pdf");
+
+        // Output text file
+        // Output to user
+        File textFile = new File("output.txt");
+
+        try (PDDocument document = PDDocument.load(pdfFile)) {
+
+            // Check if PDF is not empty
+            if (!document.isEncrypted()) {
+
+                PDFTextStripper pdfStripper = new PDFTextStripper();
+
+                // Extract text
+                String text = pdfStripper.getText(document);
+
+                // Write text to file
+                FileWriter writer = new FileWriter(textFile);
+                writer.write(text);
+                writer.close();
+
+                System.out.println(" PDF converted to text successfully!");
+
+            } else {
+                System.out.println("❌ PDF is encrypted!");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
