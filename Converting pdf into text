@@ -40,7 +40,7 @@ public class PDFToTextConverter {
                 System.out.println(" PDF converted to text successfully!");
 
             } else {
-                System.out.println("❌ PDF is encrypted!");
+                System.out.println("PDF is encrypted!");
             }
 
         } catch (IOException e) {
