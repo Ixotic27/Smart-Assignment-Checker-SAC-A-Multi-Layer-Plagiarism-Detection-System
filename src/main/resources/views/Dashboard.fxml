@@ -8,6 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ProgressBar?>
 
 <VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.sac.DashboardController" style="-fx-padding: 40; -fx-background-color: #f4f4f4;">
@@ -18,17 +19,30 @@
         </font>
     </Label>
     
-    <VBox spacing="15.0" alignment="CENTER" maxWidth="600">
+    <VBox spacing="15.0" alignment="CENTER" maxWidth="650">
+        <!-- Document 1 Upload -->
         <HBox spacing="10.0" alignment="CENTER_LEFT">
-            <Button text="Upload PDF" onAction="#handleUploadPDF" 
+            <Button text="Upload PDF 1" onAction="#handleUploadPDF1" 
                     style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;"/>
-            <Label fx:id="selectedFileLabel" text="No file selected" style="-fx-text-fill: #7f8c8d;">
+            <Label fx:id="selectedFile1Label" text="No file selected" style="-fx-text-fill: #7f8c8d;">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Label>
+        </HBox>
+
+        <!-- Document 2 Upload -->
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Button text="Upload PDF 2" onAction="#handleUploadPDF2" 
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;"/>
+            <Label fx:id="selectedFile2Label" text="No file selected" style="-fx-text-fill: #7f8c8d;">
                 <font>
                     <Font size="14.0"/>
                 </font>
             </Label>
         </HBox>
         
+        <!-- Strictness Level Selection -->
         <HBox spacing="10.0" alignment="CENTER_LEFT">
             <Label text="Strictness Level:">
                 <font>
@@ -38,11 +52,16 @@
             <ComboBox fx:id="strictnessComboBox" prefWidth="150.0" style="-fx-font-size: 14px;"/>
         </HBox>
         
+        <!-- Check Similarity Button -->
         <Button text="Check Similarity" onAction="#handleCheckSimilarity" 
                 style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-pref-width: 200;" />
-                
-        <TextArea fx:id="outputArea" editable="false" prefHeight="250.0" prefWidth="600.0" 
-                  style="-fx-font-family: monospace; -fx-font-size: 14px;" promptText="Results will be shown here..."/>
+        
+        <!-- Progress Bar -->
+        <ProgressBar fx:id="progressBar" prefWidth="600.0" visible="false" style="-fx-accent: #3498db;"/>
+
+        <!-- Results Output -->
+        <TextArea fx:id="outputArea" editable="false" prefHeight="300.0" prefWidth="650.0" 
+                  style="-fx-font-family: monospace; -fx-font-size: 13px;" promptText="Results will be shown here..."/>
     </VBox>
     
 </VBox>

@@ -2,9 +2,26 @@ package com.sac.algorithms;
 
 import java.util.*;
 
+/**
+ * RabinKarp - Level 2 (Medium Strictness) text similarity algorithm.
+ *
+ * Uses a rolling hash over consecutive word chunks (n-grams) to detect
+ * exact structural pattern matches between two documents.
+ *
+ * Algorithm:
+ *   1. Normalize both texts to lowercase word arrays
+ *   2. Generate rolling hashes over sliding windows of CHUNK_SIZE words
+ *   3. Compare hash sets using Jaccard-style intersection/union
+ *
+ * The rolling hash uses the full hashCode of each word (not just first char)
+ * for better accuracy, combined with polynomial rolling to maintain O(n) generation.
+ *
+ * Time Complexity: O(n + m) average where n, m = word counts
+ * Space Complexity: O(n + m) for hash sets
+ */
 public class RabinKarp implements SimilarityAlgorithm {
-    private static final int CHUNK_SIZE = 15;
-    private static final int BASE = 256;
+    private static final int CHUNK_SIZE = 5;  // 5-word sliding window (n-gram)
+    private static final long BASE = 31L;
     private static final long PRIME = 1000000007L;
 
     @Override
@@ -27,27 +44,42 @@ public class RabinKarp implements SimilarityAlgorithm {
         return ((double) intersection.size() / union.size()) * 100.0;
     }
 
+    /**
+     * Generates rolling hashes for all CHUNK_SIZE-word windows in the word array.
+     * Uses word hashCode combined with polynomial rolling for O(1) per window.
+     */
     private Set<Long> generateHashes(String[] words) {
         Set<Long> hashes = new HashSet<>();
         if (words.length < CHUNK_SIZE)
             return hashes;
-        long currentHash = 0;
+
+        // Precompute BASE^(CHUNK_SIZE-1) mod PRIME
         long h = 1;
         for (int i = 0; i < CHUNK_SIZE - 1; i++) {
             h = (h * BASE) % PRIME;
         }
+
+        // Compute hash for the first window using full word hashCodes
+        long currentHash = 0;
         for (int i = 0; i < CHUNK_SIZE; i++) {
-            currentHash = (currentHash * BASE + words[i].charAt(0)) % PRIME;
+            currentHash = (currentHash * BASE + wordHash(words[i])) % PRIME;
         }
         hashes.add(currentHash);
+
+        // Roll the window across the rest of the array
         for (int i = CHUNK_SIZE; i < words.length; i++) {
-            currentHash = (currentHash - words[i - CHUNK_SIZE].charAt(0) * h) % PRIME;
-            currentHash = (currentHash * BASE + words[i].charAt(0)) % PRIME;
-            if (currentHash < 0)
-                currentHash += PRIME;
+            currentHash = (currentHash - wordHash(words[i - CHUNK_SIZE]) * h % PRIME + PRIME) % PRIME;
+            currentHash = (currentHash * BASE + wordHash(words[i])) % PRIME;
             hashes.add(currentHash);
         }
         return hashes;
     }
 
+    /**
+     * Generates a positive hash value for a word.
+     * Uses Java's String.hashCode() mapped to positive long range.
+     */
+    private long wordHash(String word) {
+        return (Math.abs((long) word.hashCode()) % PRIME);
+    }
 }
