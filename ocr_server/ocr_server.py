@@ -56,11 +56,21 @@ def ocr_pdf():
             page_lines = []
             if result:
                 for page_result in result:
-                    if page_result:
+                    if not page_result:
+                        continue
+                    if isinstance(page_result, dict):
+                        # PaddleOCR v3.x dict format
+                        if 'rec_texts' in page_result:
+                            for text in page_result['rec_texts']:
+                                if text:
+                                    page_lines.append(str(text))
+                    elif isinstance(page_result, list):
+                        # PaddleOCR v2.x nested list format
                         for line in page_result:
                             try:
-                                text = line[1][0] if isinstance(line[1], (list, tuple)) else str(line[1])
-                                page_lines.append(text)
+                                if line and isinstance(line, list) and len(line) > 1:
+                                    text = line[1][0] if isinstance(line[1], (list, tuple)) else str(line[1])
+                                    page_lines.append(text)
                             except (IndexError, TypeError):
                                 continue
 
