@@ -70,6 +70,7 @@ public class DashboardController {
 
         // Connect the table to its data list
         resultsTable.setItems(tableData);
+        resultsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         setupTableColumns();
 
         // Disable export until there are results
