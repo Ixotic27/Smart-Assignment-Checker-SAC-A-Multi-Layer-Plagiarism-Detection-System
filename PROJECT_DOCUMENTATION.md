@@ -233,7 +233,7 @@ This package applies advanced Data Structures and Algorithms (DSA) to solve the 
 ### Step 1: Start the OCR Server (required for handwritten PDFs)
 ```bash
 cd ocr_server
-start_ocr.bat
+.\start_ocr.bat
 ```
 Keep this terminal window open while using the application.
 
