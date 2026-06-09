@@ -52,11 +52,11 @@
     <TableView fx:id="resultsTable" prefHeight="320" prefWidth="800" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="colIndex" text="#" prefWidth="40" sortable="false"/>
-            <TableColumn fx:id="colFileName" text="Student File" prefWidth="190" sortable="false"/>
-            <TableColumn fx:id="colJaccard" text="Jaccard %" prefWidth="95"/>
-            <TableColumn fx:id="colRabinKarp" text="Rabin-Karp %" prefWidth="105"/>
-            <TableColumn fx:id="colLCS" text="LCS %" prefWidth="80"/>
-            <TableColumn fx:id="colFinal" text="Final Score %" prefWidth="105"/>
+            <TableColumn fx:id="colFileName" text="Student File" prefWidth="180" sortable="false"/>
+            <TableColumn fx:id="colKeyword" text="Keyword Coverage %" prefWidth="120"/>
+            <TableColumn fx:id="colConcept" text="Concept Match %" prefWidth="110"/>
+            <TableColumn fx:id="colSequence" text="Sequence Match %" prefWidth="110"/>
+            <TableColumn fx:id="colFinal" text="Assignment Score %" prefWidth="120"/>
             <TableColumn fx:id="colVerdict" text="Verdict" prefWidth="95" sortable="false"/>
         </columns>
     </TableView>

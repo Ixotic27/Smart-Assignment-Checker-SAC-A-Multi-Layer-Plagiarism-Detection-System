@@ -1,27 +1,20 @@
-# PaddleOCR server for extracting text from PDF files.
-# Handles both typed and handwritten assignments.
+# RapidOCR server for extracting text from PDF files.
+# Uses ONNX Runtime with PaddleOCR models — fast and accurate on CPU.
 # Run this server BEFORE starting the Java application.
 
-import os
-# Disable oneDNN to avoid NotImplementedError on CPU execution
-os.environ['FLAGS_use_onednn'] = '0'
-os.environ['PADDLE_PDX_ENABLE_MKLDNN_BYDEFAULT'] = '0'
-os.environ['FLAGS_enable_pir_in_executor'] = '0'
-os.environ['FLAGS_enable_pir_api'] = '0'
-os.environ['FLAGS_allocator_strategy'] = 'naive_best_fit'
-
 from flask import Flask, request
-from paddleocr import PaddleOCR
+from rapidocr_onnxruntime import RapidOCR
 import fitz  # PyMuPDF - renders PDF pages to images
 import numpy as np
 from PIL import Image
 import io
+import os
 import tempfile
 
 app = Flask(__name__)
 
-# Initialize PaddleOCR with text orientation detection and disabled mkldnn + limited threads for stability on CPU
-ocr = PaddleOCR(use_textline_orientation=True, lang='en', enable_mkldnn=False, cpu_threads=2)
+# Initialize RapidOCR (uses ONNX Runtime — much faster than PaddlePaddle on CPU)
+ocr = RapidOCR()
 
 
 @app.route('/ocr', methods=['POST'])
@@ -40,48 +33,33 @@ def ocr_pdf():
         all_text = []
 
         for page_num in range(len(doc)):
-            # Render page as an image at 150 DPI to save memory and process faster
+            # Render page as an image (150 DPI — good balance of quality and speed)
             page = doc[page_num]
             pix = page.get_pixmap(dpi=150)
             img_bytes = pix.tobytes("png")
 
-            # Convert to numpy array for PaddleOCR
+            # Convert to numpy array for RapidOCR
             img = Image.open(io.BytesIO(img_bytes))
             img_array = np.array(img)
 
             # Run OCR on this page
-            result = ocr.ocr(img_array)
-
-            # Collect recognized text from this page
             page_lines = []
+            result, elapsed = ocr(img_array)
             if result:
-                for page_result in result:
-                    if not page_result:
-                        continue
-                    if isinstance(page_result, dict):
-                        # PaddleOCR v3.x dict format
-                        if 'rec_texts' in page_result:
-                            for text in page_result['rec_texts']:
-                                if text:
-                                    page_lines.append(str(text))
-                    elif isinstance(page_result, list):
-                        # PaddleOCR v2.x nested list format
-                        for line in page_result:
-                            try:
-                                if line and isinstance(line, list) and len(line) > 1:
-                                    text = line[1][0] if isinstance(line[1], (list, tuple)) else str(line[1])
-                                    page_lines.append(text)
-                            except (IndexError, TypeError):
-                                continue
+                for line in result:
+                    # Each line is [box_coords, text, confidence]
+                    text = line[1]
+                    if text and str(text).strip():
+                        page_lines.append(str(text).strip())
 
             all_text.append(" ".join(page_lines))
+            print(f"Page {page_num}: {len(page_lines)} lines in {elapsed}s", flush=True)
     finally:
         if doc is not None:
             try:
                 doc.close()
             except Exception:
                 pass
-        # Clean up temp file safely
         try:
             os.unlink(temp_file.name)
         except Exception:
@@ -98,6 +76,6 @@ def health():
 
 
 if __name__ == '__main__':
-    print("PaddleOCR server starting on port 5000...")
+    print("RapidOCR server starting on port 5000...")
     print("Keep this window open while using Smart Assignment Checker.")
     app.run(host='127.0.0.1', port=5000, debug=False)

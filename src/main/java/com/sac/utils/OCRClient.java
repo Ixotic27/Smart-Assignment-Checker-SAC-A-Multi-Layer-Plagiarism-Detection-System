@@ -25,7 +25,7 @@ public class OCRClient {
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create(SERVER_URL + "/ocr"))
             .header("Content-Type", "application/pdf")
-            .timeout(Duration.ofMinutes(3))
+            .timeout(Duration.ofMinutes(10))
             .POST(HttpRequest.BodyPublishers.ofByteArray(pdfBytes))
             .build();
 

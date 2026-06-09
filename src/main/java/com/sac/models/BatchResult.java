@@ -42,11 +42,11 @@ public class BatchResult {
         return sum / results.size();
     }
 
-    // Counts how many students are flagged as high similarity (75% or above)
+    // Counts how many students scored Excellent (80% or above)
     public int getFlaggedCount() {
         int count = 0;
         for (SimilarityResult r : results) {
-            if (r.getSimilarityScore() >= 75) {
+            if (r.getSimilarityScore() >= 80) {
                 count++;
             }
         }

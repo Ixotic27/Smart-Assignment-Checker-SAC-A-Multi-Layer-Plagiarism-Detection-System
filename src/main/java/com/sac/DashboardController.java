@@ -42,9 +42,9 @@ public class DashboardController {
     @FXML private TableView<SimilarityResult> resultsTable;
     @FXML private TableColumn<SimilarityResult, String> colIndex;
     @FXML private TableColumn<SimilarityResult, String> colFileName;
-    @FXML private TableColumn<SimilarityResult, String> colJaccard;
-    @FXML private TableColumn<SimilarityResult, String> colRabinKarp;
-    @FXML private TableColumn<SimilarityResult, String> colLCS;
+    @FXML private TableColumn<SimilarityResult, String> colKeyword;
+    @FXML private TableColumn<SimilarityResult, String> colConcept;
+    @FXML private TableColumn<SimilarityResult, String> colSequence;
     @FXML private TableColumn<SimilarityResult, String> colFinal;
     @FXML private TableColumn<SimilarityResult, String> colVerdict;
 
@@ -98,38 +98,38 @@ public class DashboardController {
             new SimpleStringProperty(data.getValue().getDoc2())
         );
 
-        // Jaccard score column - shows "-" if algorithm was not run
-        colJaccard.setCellValueFactory(data -> {
-            double val = data.getValue().getJaccardSimilarity();
+        // Keyword Coverage score column - shows "-" if algorithm was not run
+        colKeyword.setCellValueFactory(data -> {
+            double val = data.getValue().getKeywordCoverage();
             String display = val >= 0 ? String.format("%.2f%%", val) : "-";
             return new SimpleStringProperty(display);
         });
 
-        // Rabin-Karp score column
-        colRabinKarp.setCellValueFactory(data -> {
-            double val = data.getValue().getRabinKarpSimilarity();
+        // Concept Match score column
+        colConcept.setCellValueFactory(data -> {
+            double val = data.getValue().getConceptMatch();
             String display = val >= 0 ? String.format("%.2f%%", val) : "-";
             return new SimpleStringProperty(display);
         });
 
-        // LCS score column
-        colLCS.setCellValueFactory(data -> {
-            double val = data.getValue().getLcsSimilarity();
+        // Sequence Match score column
+        colSequence.setCellValueFactory(data -> {
+            double val = data.getValue().getSequenceMatch();
             String display = val >= 0 ? String.format("%.2f%%", val) : "-";
             return new SimpleStringProperty(display);
         });
 
-        // Final combined score column
+        // Final assignment score column
         colFinal.setCellValueFactory(data ->
             new SimpleStringProperty(String.format("%.2f%%", data.getValue().getSimilarityScore()))
         );
 
-        // Verdict column based on final score thresholds
+        // Verdict column based on assignment score thresholds
         colVerdict.setCellValueFactory(data -> {
             double score = data.getValue().getSimilarityScore();
-            if (score >= 75) return new SimpleStringProperty("HIGH");
-            if (score >= 40) return new SimpleStringProperty("MODERATE");
-            return new SimpleStringProperty("LOW");
+            if (score >= 80) return new SimpleStringProperty("EXCELLENT");
+            if (score >= 50) return new SimpleStringProperty("GOOD");
+            return new SimpleStringProperty("NEEDS WORK");
         });
     }
 
@@ -229,8 +229,17 @@ public class DashboardController {
                 progressBar.setVisible(false);
                 checkButton.setDisable(false);
                 exportButton.setDisable(false);
-                statusLabel.setText("Done! " + result.getResults().size() + " files analyzed. "
-                    + result.getFlaggedCount() + " flagged as high similarity.");
+
+                int excellent = 0, good = 0, needsWork = 0;
+                for (SimilarityResult r : result.getResults()) {
+                    double s = r.getSimilarityScore();
+                    if (s >= 80) excellent++;
+                    else if (s >= 50) good++;
+                    else needsWork++;
+                }
+
+                statusLabel.setText("Done! " + result.getResults().size() + " files graded. "
+                    + excellent + " Excellent, " + good + " Good, " + needsWork + " Needs Work.");
             });
         }).start();
     }
