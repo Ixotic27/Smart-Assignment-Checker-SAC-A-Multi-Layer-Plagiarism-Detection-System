@@ -2,6 +2,14 @@
 # Handles both typed and handwritten assignments.
 # Run this server BEFORE starting the Java application.
 
+import os
+# Disable oneDNN to avoid NotImplementedError on CPU execution
+os.environ['FLAGS_use_onednn'] = '0'
+os.environ['PADDLE_PDX_ENABLE_MKLDNN_BYDEFAULT'] = '0'
+os.environ['FLAGS_enable_pir_in_executor'] = '0'
+os.environ['FLAGS_enable_pir_api'] = '0'
+os.environ['FLAGS_allocator_strategy'] = 'naive_best_fit'
+
 from flask import Flask, request
 from paddleocr import PaddleOCR
 import fitz  # PyMuPDF - renders PDF pages to images
@@ -9,12 +17,11 @@ import numpy as np
 from PIL import Image
 import io
 import tempfile
-import os
 
 app = Flask(__name__)
 
-# Initialize PaddleOCR with text orientation detection
-ocr = PaddleOCR(use_textline_orientation=True, lang='en')
+# Initialize PaddleOCR with text orientation detection and disabled mkldnn + limited threads for stability on CPU
+ocr = PaddleOCR(use_textline_orientation=True, lang='en', enable_mkldnn=False, cpu_threads=2)
 
 
 @app.route('/ocr', methods=['POST'])
@@ -27,14 +34,15 @@ def ocr_pdf():
     temp_file.write(pdf_bytes)
     temp_file.close()
 
+    doc = None
     try:
         doc = fitz.open(temp_file.name)
         all_text = []
 
         for page_num in range(len(doc)):
-            # Render page as an image at 300 DPI
+            # Render page as an image at 150 DPI to save memory and process faster
             page = doc[page_num]
-            pix = page.get_pixmap(dpi=300)
+            pix = page.get_pixmap(dpi=150)
             img_bytes = pix.tobytes("png")
 
             # Convert to numpy array for PaddleOCR
@@ -57,11 +65,17 @@ def ocr_pdf():
                                 continue
 
             all_text.append(" ".join(page_lines))
-
-        doc.close()
     finally:
-        # Clean up temp file
-        os.unlink(temp_file.name)
+        if doc is not None:
+            try:
+                doc.close()
+            except Exception:
+                pass
+        # Clean up temp file safely
+        try:
+            os.unlink(temp_file.name)
+        except Exception:
+            pass
 
     # Return plain text so Java doesn't need JSON parsing
     return "\n".join(all_text), 200, {'Content-Type': 'text/plain; charset=utf-8'}
