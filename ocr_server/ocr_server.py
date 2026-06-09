@@ -13,8 +13,8 @@ import os
 
 app = Flask(__name__)
 
-# Initialize PaddleOCR with angle detection for rotated text
-ocr = PaddleOCR(use_angle_cls=True, lang='en', show_log=False)
+# Initialize PaddleOCR with text orientation detection
+ocr = PaddleOCR(use_textline_orientation=True, lang='en')
 
 
 @app.route('/ocr', methods=['POST'])
@@ -42,14 +42,19 @@ def ocr_pdf():
             img_array = np.array(img)
 
             # Run OCR on this page
-            result = ocr.ocr(img_array, cls=True)
+            result = ocr.ocr(img_array)
 
             # Collect recognized text from this page
             page_lines = []
-            if result and result[0]:
-                for line in result[0]:
-                    text = line[1][0]
-                    page_lines.append(text)
+            if result:
+                for page_result in result:
+                    if page_result:
+                        for line in page_result:
+                            try:
+                                text = line[1][0] if isinstance(line[1], (list, tuple)) else str(line[1])
+                                page_lines.append(text)
+                            except (IndexError, TypeError):
+                                continue
 
             all_text.append(" ".join(page_lines))
 

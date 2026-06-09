@@ -22,3 +22,7 @@ logs/
 
 # PDFs directory (if testing locally with assignment files)
 test-documents/
+
+# Maven Shade Plugin
+dependency-reduced-pom.xml
+
