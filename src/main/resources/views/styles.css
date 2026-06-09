@@ -1,0 +1,121 @@
+/* ==========================================
+   Smart Assignment Checker - Dashboard Styles
+   All UI styling is in this single file.
+   ========================================== */
+
+
+/* -- Page title at the top of the dashboard -- */
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* -- Section headers like "Answer Sheet:", "Student Files:" -- */
+.section-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+/* -- Green buttons for uploading PDF files -- */
+.upload-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8 15 8 15;
+    -fx-background-radius: 5;
+}
+.upload-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+/* -- Blue "Check All Assignments" button -- */
+.check-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 25 10 25;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+}
+.check-button:hover {
+    -fx-background-color: #2980b9;
+}
+.check-button:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* -- Orange "Export CSV" button -- */
+.export-button {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15 8 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+}
+.export-button:hover {
+    -fx-background-color: #d35400;
+}
+.export-button:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* -- File name labels shown next to upload buttons -- */
+.file-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* -- Progress bar shown while processing files -- */
+.progress-bar > .bar {
+    -fx-background-color: #3498db;
+    -fx-background-radius: 3;
+}
+.progress-bar > .track {
+    -fx-background-color: #ecf0f1;
+    -fx-background-radius: 3;
+}
+
+/* -- Status text below the progress bar -- */
+.status-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-style: italic;
+}
+
+/* -- Results table -- */
+.table-view {
+    -fx-font-size: 13px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 3;
+}
+
+/* -- Table column headers -- */
+.table-view .column-header {
+    -fx-background-color: #34495e;
+}
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* -- Alternating row colors for readability -- */
+.table-view .table-row-cell:odd {
+    -fx-background-color: #f7f9fa;
+}
+.table-view .table-row-cell:even {
+    -fx-background-color: white;
+}
+.table-view .table-row-cell:selected {
+    -fx-background-color: #d5e8f0;
+}
+
+/* -- Strictness dropdown -- */
+.combo-box {
+    -fx-font-size: 14px;
+}

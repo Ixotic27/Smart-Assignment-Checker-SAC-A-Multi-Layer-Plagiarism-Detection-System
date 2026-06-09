@@ -3,65 +3,68 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.sac.DashboardController" style="-fx-padding: 40; -fx-background-color: #f4f4f4;">
-    
-    <Label text="Assignment Checker Dashboard" textFill="#2c3e50">
-        <font>
-            <Font name="System Bold" size="24.0"/>
-        </font>
-    </Label>
-    
-    <VBox spacing="15.0" alignment="CENTER" maxWidth="650">
-        <!-- Document 1 Upload -->
-        <HBox spacing="10.0" alignment="CENTER_LEFT">
-            <Button text="Upload PDF 1" onAction="#handleUploadPDF1" 
-                    style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;"/>
-            <Label fx:id="selectedFile1Label" text="No file selected" style="-fx-text-fill: #7f8c8d;">
-                <font>
-                    <Font size="14.0"/>
-                </font>
-            </Label>
-        </HBox>
+<VBox alignment="TOP_CENTER" spacing="15"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sac.DashboardController"
+      stylesheets="@styles.css"
+      style="-fx-padding: 25; -fx-background-color: #f4f4f4;">
 
-        <!-- Document 2 Upload -->
-        <HBox spacing="10.0" alignment="CENTER_LEFT">
-            <Button text="Upload PDF 2" onAction="#handleUploadPDF2" 
-                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 15;"/>
-            <Label fx:id="selectedFile2Label" text="No file selected" style="-fx-text-fill: #7f8c8d;">
-                <font>
-                    <Font size="14.0"/>
-                </font>
-            </Label>
-        </HBox>
-        
-        <!-- Strictness Level Selection -->
-        <HBox spacing="10.0" alignment="CENTER_LEFT">
-            <Label text="Strictness Level:">
-                <font>
-                    <Font size="14.0"/>
-                </font>
-            </Label>
-            <ComboBox fx:id="strictnessComboBox" prefWidth="150.0" style="-fx-font-size: 14px;"/>
-        </HBox>
-        
-        <!-- Check Similarity Button -->
-        <Button text="Check Similarity" onAction="#handleCheckSimilarity" 
-                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-pref-width: 200;" />
-        
-        <!-- Progress Bar -->
-        <ProgressBar fx:id="progressBar" prefWidth="600.0" visible="false" style="-fx-accent: #3498db;"/>
+    <!-- Page Title -->
+    <Label text="Smart Assignment Checker" styleClass="title-label"/>
 
-        <!-- Results Output -->
-        <TextArea fx:id="outputArea" editable="false" prefHeight="300.0" prefWidth="650.0" 
-                  style="-fx-font-family: monospace; -fx-font-size: 13px;" promptText="Results will be shown here..."/>
-    </VBox>
-    
+    <!-- Answer Sheet Upload Section -->
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <padding><Insets left="10"/></padding>
+        <Label text="Answer Sheet:" styleClass="section-label" prefWidth="120"/>
+        <Button text="Upload PDF" onAction="#handleUploadAnswerSheet" styleClass="upload-button"/>
+        <Label fx:id="answerSheetLabel" text="No file selected" styleClass="file-label"/>
+    </HBox>
+
+    <!-- Student Files Upload Section -->
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <padding><Insets left="10"/></padding>
+        <Label text="Student Files:" styleClass="section-label" prefWidth="120"/>
+        <Button text="Upload PDFs (max 60)" onAction="#handleUploadStudentFiles" styleClass="upload-button"/>
+        <Label fx:id="studentFilesLabel" text="No files selected" styleClass="file-label"/>
+    </HBox>
+
+    <!-- Strictness Selection and Check Button -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <padding><Insets left="10"/></padding>
+        <Label text="Strictness:" styleClass="section-label"/>
+        <ComboBox fx:id="strictnessComboBox" prefWidth="150"/>
+        <Button fx:id="checkButton" text="Check All Assignments" onAction="#handleCheckAll" styleClass="check-button"/>
+    </HBox>
+
+    <!-- Progress Bar and Status -->
+    <ProgressBar fx:id="progressBar" prefWidth="780" visible="false"/>
+    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
+
+    <!-- Results Table -->
+    <TableView fx:id="resultsTable" prefHeight="320" prefWidth="800" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colIndex" text="#" prefWidth="40" sortable="false"/>
+            <TableColumn fx:id="colFileName" text="Student File" prefWidth="190" sortable="false"/>
+            <TableColumn fx:id="colJaccard" text="Jaccard %" prefWidth="95"/>
+            <TableColumn fx:id="colRabinKarp" text="Rabin-Karp %" prefWidth="105"/>
+            <TableColumn fx:id="colLCS" text="LCS %" prefWidth="80"/>
+            <TableColumn fx:id="colFinal" text="Final Score %" prefWidth="105"/>
+            <TableColumn fx:id="colVerdict" text="Verdict" prefWidth="95" sortable="false"/>
+        </columns>
+    </TableView>
+
+    <!-- Export Button -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <padding><Insets left="10"/></padding>
+        <Button fx:id="exportButton" text="Export CSV" onAction="#handleExportCSV" styleClass="export-button"/>
+    </HBox>
+
 </VBox>

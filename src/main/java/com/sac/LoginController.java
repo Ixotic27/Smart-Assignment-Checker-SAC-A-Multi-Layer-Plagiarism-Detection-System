@@ -57,7 +57,7 @@ public class LoginController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             // Set new scene
-            Scene scene = new Scene(loader.load(), 850, 650);
+            Scene scene = new Scene(loader.load(), 900, 700);
 
             stage.setTitle("Dashboard - Smart Assignment Checker");
             stage.setScene(scene);

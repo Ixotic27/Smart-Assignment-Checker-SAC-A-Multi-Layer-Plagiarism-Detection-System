@@ -1,265 +1,284 @@
 package com.sac;
 
-import com.sac.algorithms.StrictnessController;
+import com.sac.models.BatchResult;
 import com.sac.models.SimilarityResult;
-import com.sac.utils.ImageHashDetector;
-import com.sac.utils.PDFExtractor;
+import com.sac.utils.BatchProcessor;
+import com.sac.utils.CSVExporter;
+import com.sac.utils.OCRClient;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.Node;
 
 import java.io.File;
 import java.util.List;
 
-/**
- * DashboardController - Connects the UI to the plagiarism detection engine.
- * Handles two PDF uploads, invokes text extraction, image dedup, and
- * routes through the StrictnessController for multi-layer analysis.
- */
+// Main controller for the Dashboard screen.
+// Handles file uploads, batch processing, table display, and CSV export.
 public class DashboardController {
 
-    @FXML private Label selectedFile1Label;
-    @FXML private Label selectedFile2Label;
+    // UI elements linked to Dashboard.fxml
+    @FXML private Label answerSheetLabel;
+    @FXML private Label studentFilesLabel;
     @FXML private ComboBox<String> strictnessComboBox;
-    @FXML private TextArea outputArea;
     @FXML private ProgressBar progressBar;
+    @FXML private Label statusLabel;
+    @FXML private Button checkButton;
+    @FXML private Button exportButton;
 
-    private File selectedFile1;
-    private File selectedFile2;
-    private static File lastVisitedDirectory;
+    // Table and its columns
+    @FXML private TableView<SimilarityResult> resultsTable;
+    @FXML private TableColumn<SimilarityResult, String> colIndex;
+    @FXML private TableColumn<SimilarityResult, String> colFileName;
+    @FXML private TableColumn<SimilarityResult, String> colJaccard;
+    @FXML private TableColumn<SimilarityResult, String> colRabinKarp;
+    @FXML private TableColumn<SimilarityResult, String> colLCS;
+    @FXML private TableColumn<SimilarityResult, String> colFinal;
+    @FXML private TableColumn<SimilarityResult, String> colVerdict;
 
-    private final StrictnessController controller = new StrictnessController();
+    // Uploaded files
+    private File answerSheetFile;
+    private List<File> studentFiles;
+
+    // Stores the last batch result for CSV export
+    private BatchResult lastBatchResult;
+
+    // Remembers the last folder the user browsed
+    private static File lastDirectory;
+
+    // Observable list backing the table
+    private ObservableList<SimilarityResult> tableData = FXCollections.observableArrayList();
+
 
     @FXML
     public void initialize() {
-        strictnessComboBox.setItems(FXCollections.observableArrayList(
-            "Easy", "Medium", "Hard"
-        ));
+        // Set up the strictness dropdown options
+        strictnessComboBox.setItems(FXCollections.observableArrayList("Easy", "Medium", "Hard"));
         strictnessComboBox.setValue("Easy");
-    }
 
-    @FXML
-    public void handleUploadPDF1(ActionEvent event) {
-        selectedFile1 = chooseFile(event);
-        if (selectedFile1 != null) {
-            selectedFile1Label.setText("✓ " + selectedFile1.getName());
-            selectedFile1Label.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
-        } else {
-            selectedFile1Label.setText("No file selected");
-            selectedFile1Label.setStyle("-fx-text-fill: #7f8c8d;");
+        // Connect the table to its data list
+        resultsTable.setItems(tableData);
+        setupTableColumns();
+
+        // Disable export until there are results
+        exportButton.setDisable(true);
+        progressBar.setVisible(false);
+
+        // Warn if the OCR server is not running
+        if (!OCRClient.isServerRunning()) {
+            statusLabel.setText("Note: OCR server not running. Start it for handwritten PDF support.");
         }
     }
 
-    @FXML
-    public void handleUploadPDF2(ActionEvent event) {
-        selectedFile2 = chooseFile(event);
-        if (selectedFile2 != null) {
-            selectedFile2Label.setText("✓ " + selectedFile2.getName());
-            selectedFile2Label.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
-        } else {
-            selectedFile2Label.setText("No file selected");
-            selectedFile2Label.setStyle("-fx-text-fill: #7f8c8d;");
-        }
-    }
 
-    private File chooseFile(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select PDF File");
-        fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+    // Tells each table column where to get its data from SimilarityResult
+    private void setupTableColumns() {
+
+        // Row number column
+        colIndex.setCellValueFactory(data -> {
+            int index = tableData.indexOf(data.getValue()) + 1;
+            return new SimpleStringProperty(String.valueOf(index));
+        });
+
+        // Student file name column
+        colFileName.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getDoc2())
         );
-        
-        if (lastVisitedDirectory != null && lastVisitedDirectory.exists()) {
-            fileChooser.setInitialDirectory(lastVisitedDirectory);
-        }
 
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-        
-        if (file != null) {
-            lastVisitedDirectory = file.getParentFile();
-        }
-        
-        return file;
+        // Jaccard score column - shows "-" if algorithm was not run
+        colJaccard.setCellValueFactory(data -> {
+            double val = data.getValue().getJaccardSimilarity();
+            String display = val >= 0 ? String.format("%.2f%%", val) : "-";
+            return new SimpleStringProperty(display);
+        });
+
+        // Rabin-Karp score column
+        colRabinKarp.setCellValueFactory(data -> {
+            double val = data.getValue().getRabinKarpSimilarity();
+            String display = val >= 0 ? String.format("%.2f%%", val) : "-";
+            return new SimpleStringProperty(display);
+        });
+
+        // LCS score column
+        colLCS.setCellValueFactory(data -> {
+            double val = data.getValue().getLcsSimilarity();
+            String display = val >= 0 ? String.format("%.2f%%", val) : "-";
+            return new SimpleStringProperty(display);
+        });
+
+        // Final combined score column
+        colFinal.setCellValueFactory(data ->
+            new SimpleStringProperty(String.format("%.2f%%", data.getValue().getSimilarityScore()))
+        );
+
+        // Verdict column based on final score thresholds
+        colVerdict.setCellValueFactory(data -> {
+            double score = data.getValue().getSimilarityScore();
+            if (score >= 75) return new SimpleStringProperty("HIGH");
+            if (score >= 40) return new SimpleStringProperty("MODERATE");
+            return new SimpleStringProperty("LOW");
+        });
     }
 
+
+    // Opens a file chooser to select the answer sheet PDF
     @FXML
-    public void handleCheckSimilarity() {
-        // Validate both files are uploaded
-        if (selectedFile1 == null || selectedFile2 == null) {
-            outputArea.setText("⚠ Please upload BOTH PDF files before checking similarity.");
+    public void handleUploadAnswerSheet(ActionEvent event) {
+        FileChooser chooser = createPdfChooser("Select Answer Sheet PDF");
+        Stage stage = getStageFromEvent(event);
+        File file = chooser.showOpenDialog(stage);
+
+        if (file != null) {
+            answerSheetFile = file;
+            lastDirectory = file.getParentFile();
+            answerSheetLabel.setText(file.getName());
+            answerSheetLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+        }
+    }
+
+
+    // Opens a multi-file chooser to select student assignment PDFs (up to 60)
+    @FXML
+    public void handleUploadStudentFiles(ActionEvent event) {
+        FileChooser chooser = createPdfChooser("Select Student Assignment PDFs (max 60)");
+        Stage stage = getStageFromEvent(event);
+        List<File> files = chooser.showOpenMultipleDialog(stage);
+
+        if (files != null && !files.isEmpty()) {
+            if (files.size() > 60) {
+                files = files.subList(0, 60);
+            }
+            studentFiles = files;
+            lastDirectory = files.get(0).getParentFile();
+            studentFilesLabel.setText(files.size() + " files selected");
+            studentFilesLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+        }
+    }
+
+
+    // Starts the batch comparison on a background thread
+    @FXML
+    public void handleCheckAll(ActionEvent event) {
+        // Validate inputs
+        if (answerSheetFile == null) {
+            statusLabel.setText("Please upload an answer sheet first.");
+            return;
+        }
+        if (studentFiles == null || studentFiles.isEmpty()) {
+            statusLabel.setText("Please upload student assignment PDFs.");
             return;
         }
 
         String strictness = strictnessComboBox.getValue();
-        outputArea.setText("⏳ Analyzing documents...\n");
+
+        // Reset UI for new run
+        tableData.clear();
         progressBar.setVisible(true);
-        progressBar.setProgress(0.0);
+        progressBar.setProgress(0);
+        checkButton.setDisable(true);
+        exportButton.setDisable(true);
+        statusLabel.setText("Starting analysis...");
 
-        // Run analysis on a background thread to keep UI responsive
+        BatchProcessor processor = new BatchProcessor();
+
+        // Run on background thread so the UI stays responsive
         new Thread(() -> {
-            try {
-                // Step 1: Extract text (with OCR fallback)
-                updateUI("  → Step 1/4: Extracting text from PDFs...\n", 0.10);
-                Thread.sleep(500);
-                String text1 = PDFExtractor.extractText(selectedFile1);
-                if (text1.isEmpty()) {
-                    updateUI("    ⤷ No selectable text in Doc1 — running OCR...\n", 0.15);
-                }
-                String text2 = PDFExtractor.extractText(selectedFile2);
-                if (text2.isEmpty()) {
-                    updateUI("    ⤷ No selectable text in Doc2 — running OCR...\n", 0.20);
-                }
-                if (!text1.isEmpty() || !text2.isEmpty()) {
-                    updateUI("    ✓ Text extracted successfully (" + countWords(text1) + " + " + countWords(text2) + " words)\n", 0.25);
-                }
+            BatchResult result = processor.processAll(
+                answerSheetFile, studentFiles, strictness,
+                new BatchProcessor.ProgressCallback() {
 
-                // Step 2: Extract images
-                updateUI("  → Step 2/4: Extracting embedded images...\n", 0.30);
-                Thread.sleep(600);
-                List<byte[]> images1 = PDFExtractor.extractImages(selectedFile1);
-                List<byte[]> images2 = PDFExtractor.extractImages(selectedFile2);
-
-                // Step 3: Run comparison
-                updateUI("  → Step 3/4: Running " + strictness + " analysis...\n", 0.50);
-                Thread.sleep(800);
-
-                ImageHashDetector.ImageDuplicateResult hashResult =
-                    ImageHashDetector.detectDuplicates(images1, images2);
-
-                // Handle image-only PDFs (no extractable text)
-                if (text1.isEmpty() && text2.isEmpty()) {
-                    updateUI("  → Step 3/4: No text found — switching to visual image comparison...\n", 0.60);
-                    Thread.sleep(600);
-
-                    updateUI("  → Step 4/4: Comparing images pixel-by-pixel (256×256 grayscale)...\n", 0.75);
-                    Thread.sleep(500);
-
-                    double pixelSimilarity = ImageHashDetector.compareBestMatch(images1, images2);
-
-                    updateUI("  → Generating report...\n", 0.90);
-                    Thread.sleep(400);
-
-                    final double finalPixelSim = pixelSimilarity;
-                    Platform.runLater(() -> {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("═══════════════════════════════════════════════\n");
-                        sb.append("  PLAGIARISM ANALYSIS REPORT\n");
-                        sb.append("═══════════════════════════════════════════════\n\n");
-                        sb.append("  Document 1: ").append(selectedFile1.getName()).append("\n");
-                        sb.append("  Document 2: ").append(selectedFile2.getName()).append("\n");
-                        sb.append("  Strictness: ").append(strictness).append("\n\n");
-                        sb.append("───────────────────────────────────────────────\n");
-                        sb.append("  ℹ PDFs contain images only (no selectable text).\n");
-                        sb.append("  → Analysis Mode: Visual Image Comparison\n");
-                        sb.append("───────────────────────────────────────────────\n\n");
-
-                        sb.append("  ALGORITHM RESULTS\n");
-                        sb.append("───────────────────────────────────────────────\n\n");
-
-                        if (!images1.isEmpty() && !images2.isEmpty()) {
-                            // SHA-256 exact match
-                            sb.append(String.format("  ▸ SHA-256 Hash Match:          %6.2f%%\n", hashResult.getDuplicatePercentage()));
-                            sb.append("    Method: Cryptographic hash comparison\n");
-                            sb.append(String.format("    (Exact duplicates: %d of %d images)\n\n",
-                                hashResult.getDuplicateCount(),
-                                Math.max(images1.size(), images2.size())));
-
-                            // Pixel comparison
-                            sb.append(String.format("  ▸ Pixel Visual Similarity:     %6.2f%%\n", finalPixelSim));
-                            sb.append("    Method: 256×256 grayscale pixel comparison\n");
-                            sb.append("    (Tolerance threshold: 30/255 per pixel)\n\n");
-
-                            // Final score = weighted: 40% hash + 60% pixel
-                            double finalScore = (hashResult.getDuplicatePercentage() * 0.4) + (finalPixelSim * 0.6);
-                            sb.append("───────────────────────────────────────────────\n");
-                            sb.append(String.format("  ★ FINAL SIMILARITY SCORE:      %6.2f%%\n", finalScore));
-                            sb.append("    (40%% Hash Match + 60%% Pixel Similarity)\n");
-                            sb.append("───────────────────────────────────────────────\n\n");
-
-                            if (finalScore >= 75) {
-                                sb.append("  ⚠ VERDICT: HIGH PLAGIARISM DETECTED\n");
-                            } else if (finalScore >= 40) {
-                                sb.append("  ⚠ VERDICT: MODERATE SIMILARITY — Manual review advised\n");
-                            } else {
-                                sb.append("  ✓ VERDICT: LOW SIMILARITY — Likely original work\n");
-                            }
-                        } else {
-                            sb.append("  ⚠ No images could be extracted from one or both PDFs.\n");
-                        }
-
-                        sb.append("═══════════════════════════════════════════════\n");
-                        outputArea.setText(sb.toString());
-                        progressBar.setProgress(1.0);
-                        progressBar.setVisible(false);
-                    });
-                    return;
-                }
-
-                // Text-based PDFs — run algorithm via StrictnessController
-                updateUI("  → Step 4/4: Computing " + strictness + " algorithm scores...\n", 0.70);
-                Thread.sleep(600);
-
-                SimilarityResult result = controller.analyze(
-                    text1, text2, strictness,
-                    selectedFile1.getName(), selectedFile2.getName()
-                );
-
-                updateUI("  → Generating report...\n", 0.90);
-                Thread.sleep(400);
-
-                // Display results
-                Platform.runLater(() -> {
-                    outputArea.setText(result.toReport());
-
-                    // Append image analysis if images exist
-                    if (images1.size() + images2.size() > 0) {
-                        outputArea.appendText("\n───────────────────────────────────────────────\n");
-                        outputArea.appendText("  IMAGE DUPLICATE ANALYSIS (SHA-256)\n");
-                        outputArea.appendText("───────────────────────────────────────────────\n");
-                        outputArea.appendText("  " + hashResult.toString() + "\n");
-                    } else {
-                        outputArea.appendText("\n  ℹ No embedded images found in either document.\n");
+                    @Override
+                    public void onProgress(int current, int total, String fileName) {
+                        Platform.runLater(() -> {
+                            progressBar.setProgress((double) current / total);
+                            statusLabel.setText("Processing " + current + "/" + total + ": " + fileName);
+                        });
                     }
 
-                    progressBar.setProgress(1.0);
-                    progressBar.setVisible(false);
-                });
+                    @Override
+                    public void onFileComplete(SimilarityResult r) {
+                        Platform.runLater(() -> tableData.add(r));
+                    }
 
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    outputArea.setText("❌ Error during analysis:\n" + e.getMessage());
-                    progressBar.setVisible(false);
-                    e.printStackTrace();
-                });
-            }
+                    @Override
+                    public void onError(String fileName, String error) {
+                        Platform.runLater(() ->
+                            statusLabel.setText("Error on " + fileName + ": " + error)
+                        );
+                    }
+                }
+            );
+
+            // Update UI when all files are done
+            Platform.runLater(() -> {
+                lastBatchResult = result;
+                progressBar.setProgress(1.0);
+                progressBar.setVisible(false);
+                checkButton.setDisable(false);
+                exportButton.setDisable(false);
+                statusLabel.setText("Done! " + result.getResults().size() + " files analyzed. "
+                    + result.getFlaggedCount() + " flagged as high similarity.");
+            });
         }).start();
     }
 
-    /**
-     * Helper to update both the output area and progress bar from a background thread.
-     */
-    private void updateUI(String message, double progress) {
-        Platform.runLater(() -> {
-            outputArea.appendText(message);
-            progressBar.setProgress(progress);
-        });
+
+    // Saves the results to a CSV file
+    @FXML
+    public void handleExportCSV(ActionEvent event) {
+        if (lastBatchResult == null || lastBatchResult.getResults().isEmpty()) {
+            statusLabel.setText("No results to export. Run analysis first.");
+            return;
+        }
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Save Results as CSV");
+        chooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("CSV Files", "*.csv")
+        );
+        chooser.setInitialFileName("sac_results.csv");
+
+        Stage stage = getStageFromEvent(event);
+        File file = chooser.showSaveDialog(stage);
+
+        if (file != null) {
+            try {
+                CSVExporter.export(lastBatchResult, file);
+                statusLabel.setText("Results exported to " + file.getName());
+            } catch (Exception e) {
+                statusLabel.setText("Export failed: " + e.getMessage());
+            }
+        }
     }
 
-    /**
-     * Counts the number of words in a string.
-     */
-    private int countWords(String text) {
-        if (text == null || text.trim().isEmpty()) return 0;
-        return text.trim().split("\\s+").length;
+
+    // Helper: creates a FileChooser configured for PDF files
+    private FileChooser createPdfChooser(String title) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle(title);
+        chooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
+        if (lastDirectory != null && lastDirectory.exists()) {
+            chooser.setInitialDirectory(lastDirectory);
+        }
+        return chooser;
+    }
+
+    // Helper: gets the Stage from an ActionEvent
+    private Stage getStageFromEvent(ActionEvent event) {
+        return (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 }
