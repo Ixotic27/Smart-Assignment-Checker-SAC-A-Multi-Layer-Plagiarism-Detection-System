@@ -65,9 +65,7 @@ public class KeywordCoverage implements SimilarityAlgorithm {
      * 4. Filtering out stop words and very short words
      */
     private Set<String> extractKeywords(String text) {
-        String[] words = text.toLowerCase()
-                            .replaceAll("[^a-zA-Z0-9 ]", "")
-                            .split("\\s+");
+        String[] words = text.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "").split("\\s+");
         Set<String> keywords = new HashSet<>();
         for (String word : words) {
             // Keep words that are meaningful (not stop words, at least 2 chars)

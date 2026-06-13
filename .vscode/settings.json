@@ -1,3 +1,14 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "sqltools.connections": [
+        {
+            "name": "Local PostgreSQL",
+            "driver": "PostgreSQL",
+            "server": "127.0.0.1",
+            "port": 5432,
+            "database": "postgres",
+            "username": "postgres",
+            "password": "admin"
+        }
+    ]
 }

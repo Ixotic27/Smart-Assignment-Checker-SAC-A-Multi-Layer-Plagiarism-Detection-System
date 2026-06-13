@@ -51,9 +51,7 @@ public class ConceptMatch implements SimilarityAlgorithm {
      * Example: "data structures are important" -> {"data structures are", "structures are important"}
      */
     private Set<String> generateNgrams(String text) {
-        String[] words = text.toLowerCase()
-                            .replaceAll("[^a-zA-Z0-9 ]", "")
-                            .split("\\s+");
+        String[] words = text.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "").split("\\s+");
 
         Set<String> ngrams = new HashSet<>();
 
