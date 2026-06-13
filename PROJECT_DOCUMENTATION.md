@@ -161,19 +161,19 @@ return ((double) covered.size() / answerNgrams.size()) * 100.0;
 
 **What it checks:** Did the student preserve the **correct order** of content from the answer?
 
-**Algorithm:** Longest Common Subsequence (LCS) with one-directional scoring using Dynamic Programming.
+**Algorithm:** Longest Common Subsequence (LCS) with one-directional scoring using a standard 2D Dynamic Programming table.
 
 **How it works:**
-1. Both texts are split into word arrays.
-2. A space-optimized 1D Dynamic Programming array computes the Longest Common Subsequence (LCS) — the longest chain of words that appear in the same order in both documents.
+1. Both text files are split into word arrays.
+2. A 2D Dynamic Programming array `dp[ansLen + 1][stuLen + 1]` computes the Longest Common Subsequence (LCS) — the longest chain of words that appear in the same order in both documents.
 3. The score is calculated as: **`LCS(answer, student) / answer_word_count × 100`**
 4. Unlike traditional LCS that divides by `max(m, n)`, this divides by the **answer's word count** only. This means if a student writes the correct answer plus extra explanation, they still get ~100%.
 5. This algorithm catches students who have the right keywords and concepts but arranged in a completely wrong order.
 
-**Key Data Structure:** `int[] dp` — 1D array for space-optimized LCS computation.
+**Key Data Structure:** `int[][] dp` — 2D array representing the dynamic programming lookup grid.
 
 **Time Complexity:** O(n × m) where n = answer words, m = student words
-**Space Complexity:** O(min(n, m)) with the 1D array optimization
+**Space Complexity:** O(n × m) for the 2D DP lookup table
 
 **Example:**
 ```
@@ -185,20 +185,18 @@ Score: 4/5 × 100 = 80.00%
 
 **Code (core logic):**
 ```java
-int[] dp = new int[stuLen + 1];
+int[][] dp = new int[ansLen + 1][stuLen + 1];
 for (int i = 1; i <= ansLen; i++) {
-    int prev = 0;
     for (int j = 1; j <= stuLen; j++) {
-        int temp = dp[j];
         if (answerWords[i - 1].equals(studentWords[j - 1])) {
-            dp[j] = prev + 1;
+            dp[i][j] = dp[i - 1][j - 1] + 1;
         } else {
-            dp[j] = Math.max(dp[j], dp[j - 1]);
+            dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
         }
-        prev = temp;
     }
 }
-return ((double) dp[stuLen] / ansLen) * 100.0;  // divide by ANSWER length
+int lcsLength = dp[ansLen][stuLen];
+return ((double) lcsLength / ansLen) * 100.0;  // divide by ANSWER length
 ```
 
 ---

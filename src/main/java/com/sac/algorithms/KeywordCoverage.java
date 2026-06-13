@@ -2,25 +2,10 @@ package com.sac.algorithms;
 
 import java.util.*;
 
-/**
- * KeywordCoverage - Level 1 (Easy Strictness) scoring algorithm.
- *
- * Measures what percentage of the answer sheet's meaningful keywords
- * appear in the student's submission.
- *
- * Formula:  score = (answer_keywords ∩ student_keywords) / answer_keywords × 100
- *
- * Key Design:
- *   - ONE-DIRECTIONAL: only checks coverage of the answer sheet's words
- *   - Filters out common stop words (the, is, a, etc.) to focus on content words
- *   - Student writing extra content does NOT reduce the score
- *
- * Time Complexity: O(n + m) where n, m = word counts
- * Space Complexity: O(n + m) for word sets
- */
+// Easy strictness: checks how many keywords from the answer sheet are in student file
 public class KeywordCoverage implements SimilarityAlgorithm {
 
-    // Common English stop words that don't carry meaningful content
+    // Stop words list to ignore common English words
     private static final Set<String> STOP_WORDS = new HashSet<>(Arrays.asList(
         "the", "a", "an", "is", "are", "was", "were", "be", "been", "being",
         "have", "has", "had", "do", "does", "did", "will", "would", "could",
@@ -44,35 +29,44 @@ public class KeywordCoverage implements SimilarityAlgorithm {
             return 0.0;
         }
 
-        // Extract meaningful keywords (excluding stop words)
+        // Get lists of clean words for both texts
         Set<String> answerKeywords = extractKeywords(answerText);
         Set<String> studentKeywords = extractKeywords(studentText);
 
-        if (answerKeywords.isEmpty()) return 100.0;
+        if (answerKeywords.isEmpty()) {
+            return 100.0;
+        }
 
-        // Count how many answer keywords appear in the student's work
-        Set<String> covered = new HashSet<>(answerKeywords);
-        covered.retainAll(studentKeywords);
-
-        return ((double) covered.size() / answerKeywords.size()) * 100.0;
-    }
-
-    /**
-     * Extracts meaningful keywords from text by:
-     * 1. Converting to lowercase
-     * 2. Removing punctuation
-     * 3. Splitting into words
-     * 4. Filtering out stop words and very short words
-     */
-    private Set<String> extractKeywords(String text) {
-        String[] words = text.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "").split("\\s+");
-        Set<String> keywords = new HashSet<>();
-        for (String word : words) {
-            // Keep words that are meaningful (not stop words, at least 2 chars)
-            if (word.length() >= 2 && !STOP_WORDS.contains(word)) {
-                keywords.add(word);
+        // Count how many answer keywords are found in student's keywords
+        int matchingCount = 0;
+        for (String word : answerKeywords) {
+            if (studentKeywords.contains(word)) {
+                matchingCount++;
             }
         }
-        return keywords;
+
+        // Calculate coverage percentage
+        double score = ((double) matchingCount / answerKeywords.size()) * 100.0;
+        return score;
+    }
+
+    // Cleans up the text and extracts keywords that are not stop words
+    private Set<String> extractKeywords(String text) {
+        String lowercaseText = text.toLowerCase();
+        // Remove punctuation and special characters
+        String cleanText = lowercaseText.replaceAll("[^a-zA-Z0-9 ]", "");
+        // Split by space
+        String[] words = cleanText.split("\\s+");
+
+        Set<String> keywordsSet = new HashSet<>();
+        for (String word : words) {
+            // Only add if word length is 2 or more and is not a stop word
+            if (word.length() >= 2) {
+                if (!STOP_WORDS.contains(word)) {
+                    keywordsSet.add(word);
+                }
+            }
+        }
+        return keywordsSet;
     }
 }
