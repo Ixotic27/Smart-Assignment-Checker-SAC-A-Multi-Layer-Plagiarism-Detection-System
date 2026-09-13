@@ -1,5 +1,5 @@
 {
-  "submitted": 57,
+  "submitted": 59,
   "history": [
     {
       "timestamp": "2026-09-13T15:36:02.162702+05:30",
@@ -399,6 +399,20 @@
       "age": "35–44",
       "exp": "Less than 6 months",
       "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-14T01:14:15.031347+05:30",
+      "city": "Dehradun",
+      "age": "18–24",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-14T01:14:38.879754+05:30",
+      "city": "Akola",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
     }
   ]
 }
