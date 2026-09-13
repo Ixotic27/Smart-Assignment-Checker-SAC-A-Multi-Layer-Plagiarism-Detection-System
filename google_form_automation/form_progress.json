@@ -1,5 +1,5 @@
 {
-  "submitted": 5,
+  "submitted": 12,
   "history": [
     {
       "timestamp": "2026-09-13T15:36:02.162702+05:30",
@@ -34,6 +34,55 @@
       "city": "Tirunelveli",
       "age": "25–34",
       "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T19:55:00.278232+05:30",
+      "city": "Dehra Dun",
+      "age": "45–54",
+      "exp": "1–2 years",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-13T19:55:23.100091+05:30",
+      "city": "Dehradun",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T19:55:46.130189+05:30",
+      "city": "Tirupati",
+      "age": "25–34",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T19:55:59.304194+05:30",
+      "city": "Guntur",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T19:56:24.945690+05:30",
+      "city": "Dehra Dun",
+      "age": "35–44",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T19:56:54.027933+05:30",
+      "city": "Durgapur",
+      "age": "18–24",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T19:57:33.590348+05:30",
+      "city": "Gorakhpur",
+      "age": "25–34",
+      "exp": "Less than 6 months",
       "lost": "Yes"
     }
   ]
