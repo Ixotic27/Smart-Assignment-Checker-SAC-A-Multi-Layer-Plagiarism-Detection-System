@@ -1,5 +1,5 @@
 {
-  "submitted": 12,
+  "submitted": 57,
   "history": [
     {
       "timestamp": "2026-09-13T15:36:02.162702+05:30",
@@ -84,6 +84,321 @@
       "age": "25–34",
       "exp": "Less than 6 months",
       "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:06:37.307111+05:30",
+      "city": "Vellore",
+      "age": "45–54",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:07:06.580642+05:30",
+      "city": "Dehradun, Uttarakhand",
+      "age": "25–34",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:07:21.236095+05:30",
+      "city": "Rewa",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:07:46.587152+05:30",
+      "city": "Hubballi",
+      "age": "18–24",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:08:05.372988+05:30",
+      "city": "Tezpur",
+      "age": "25–34",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:08:22.552872+05:30",
+      "city": "Gorakhpur",
+      "age": "45–54",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:08:46.409943+05:30",
+      "city": "Mandi",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:09:02.281292+05:30",
+      "city": "Guwahati",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:09:23.348982+05:30",
+      "city": "Dharamshala",
+      "age": "18–24",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:09:48.755363+05:30",
+      "city": "Bilaspur",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:10:13.869093+05:30",
+      "city": "Tirunelveli",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:10:34.960107+05:30",
+      "city": "Dehradun, Uttarakhand",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:10:50.173532+05:30",
+      "city": "Kadapa",
+      "age": "25–34",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:11:13.759248+05:30",
+      "city": "Dehra Dun",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:11:32.131746+05:30",
+      "city": "Dehradun",
+      "age": "18–24",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:11:59.342764+05:30",
+      "city": "Jalpaiguri",
+      "age": "35–44",
+      "exp": "1–2 years",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-13T23:12:20.631744+05:30",
+      "city": "Udaipur",
+      "age": "25–34",
+      "exp": "Less than 6 months",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-13T23:12:42.770281+05:30",
+      "city": "Bhagalpur",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:12:59.350755+05:30",
+      "city": "Bathinda",
+      "age": "35–44",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:13:20.551647+05:30",
+      "city": "Ratlam",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:13:33.243581+05:30",
+      "city": "Ratlam",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:14:04.423931+05:30",
+      "city": "Dehradun",
+      "age": "45–54",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:14:31.606838+05:30",
+      "city": "Nizamabad",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-13T23:15:02.722203+05:30",
+      "city": "Dehradun",
+      "age": "18–24",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:15:16.104197+05:30",
+      "city": "Alwar",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-13T23:15:45.536523+05:30",
+      "city": "Tumakuru",
+      "age": "35–44",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:15:59.968845+05:30",
+      "city": "Rajkot",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:16:18.560554+05:30",
+      "city": "Haridwar",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-13T23:16:48.288835+05:30",
+      "city": "Jamnagar",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:17:12.723550+05:30",
+      "city": "Jamnagar",
+      "age": "18–24",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:17:41.967666+05:30",
+      "city": "Ujjain",
+      "age": "35–44",
+      "exp": "1–2 years",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-13T23:18:09.593345+05:30",
+      "city": "Gwalior",
+      "age": "25–34",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:18:34.374844+05:30",
+      "city": "Dehradun",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:18:59.127088+05:30",
+      "city": "Latur",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:19:18.388244+05:30",
+      "city": "Ahmednagar",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:19:43.938070+05:30",
+      "city": "Dehradun (UK)",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:20:09.250868+05:30",
+      "city": "Guntur",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:20:32.471110+05:30",
+      "city": "Balasore",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:21:00.030660+05:30",
+      "city": "Gandhinagar",
+      "age": "45–54",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:21:15.394541+05:30",
+      "city": "dehradun",
+      "age": "45–54",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:21:42.339822+05:30",
+      "city": "Dehradun",
+      "age": "18–24",
+      "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:22:12.632380+05:30",
+      "city": "dehradun",
+      "age": "18–24",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:22:31.063001+05:30",
+      "city": "Ujjain",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:22:44.672151+05:30",
+      "city": "Hoshiarpur",
+      "age": "35–44",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-13T23:23:03.995556+05:30",
+      "city": "Dehradun",
+      "age": "35–44",
+      "exp": "Less than 6 months",
+      "lost": "No"
     }
   ]
 }
