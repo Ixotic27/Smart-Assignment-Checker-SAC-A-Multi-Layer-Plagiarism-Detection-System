@@ -1,5 +1,5 @@
 {
-  "submitted": 59,
+  "submitted": 64,
   "history": [
     {
       "timestamp": "2026-09-13T15:36:02.162702+05:30",
@@ -411,6 +411,41 @@
       "timestamp": "2026-09-14T01:14:38.879754+05:30",
       "city": "Akola",
       "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-14T21:33:38.319602+05:30",
+      "city": "Hubballi",
+      "age": "45–54",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-14T21:34:09.362695+05:30",
+      "city": "Kota",
+      "age": "18–24",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-14T21:34:25.583723+05:30",
+      "city": "Mandi",
+      "age": "25–34",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-14T21:34:58.369449+05:30",
+      "city": "Sambalpur",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-14T21:35:24.506180+05:30",
+      "city": "Erode",
+      "age": "18–24",
       "exp": "6 months–1 year",
       "lost": "Yes"
     }
