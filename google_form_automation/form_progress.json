@@ -1,5 +1,5 @@
 {
-  "submitted": 68,
+  "submitted": 72,
   "history": [
     {
       "timestamp": "2026-09-13T15:36:02.162702+05:30",
@@ -475,6 +475,34 @@
       "city": "Mathura",
       "age": "25–34",
       "exp": "Less than 6 months",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-15T20:03:22.768287+05:30",
+      "city": "Mehsana",
+      "age": "18–24",
+      "exp": "6 months–1 year",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-15T20:03:42.563205+05:30",
+      "city": "Kota",
+      "age": "25–34",
+      "exp": "1–2 years",
+      "lost": "Yes"
+    },
+    {
+      "timestamp": "2026-09-15T20:04:03.915987+05:30",
+      "city": "Dehradun",
+      "age": "18–24",
+      "exp": "Less than 6 months",
+      "lost": "No"
+    },
+    {
+      "timestamp": "2026-09-15T20:04:28.651411+05:30",
+      "city": "Tumakuru",
+      "age": "18–24",
+      "exp": "6 months–1 year",
       "lost": "Yes"
     }
   ]
